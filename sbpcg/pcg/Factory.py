@@ -3,13 +3,19 @@ import random
 
 from sbpcg import Creature
 from sbpcg import CreatureTypes
+from sbpcg import CreatureGenotype
 from sbpcg import Power
 
 
 class Factory(ABC):
     @staticmethod
     @abstractmethod
-    def make():
+    def make(parameter:int):
+        pass
+
+    @staticmethod
+    @abstractmethod
+    def make_average(creatureType:CreatureTypes, parameter:int):
         pass
 
 class PowerFactory(Factory):
@@ -76,94 +82,174 @@ class PowerFactory(Factory):
     ])
 
     @staticmethod
-    def make():
+    def make_power_name():
         adjective = random.choice(list(PowerFactory.adjectives)).title()
         action = random.choice(list(PowerFactory.battle_words)).title()
-        return Power(f'{adjective} {action}', random.randint(PowerFactory.minPowerValue, PowerFactory.maxPowerValue), random.choice(list(CreatureTypes)))
+        return f'{adjective} {action}'
+
+    @staticmethod
+    def make(parameter:int):
+        powerValue = random.randint(PowerFactory.minPowerValue, PowerFactory.maxPowerValue)
+        if powerValue > parameter:
+            powerValue = parameter
+
+        return Power(PowerFactory.make_power_name(), powerValue, random.choice(list(CreatureTypes)))
+    
+    @staticmethod
+    def make_average(creatureType, parameter):
+        return Power(PowerFactory.make_power_name(), parameter, creatureType)
     
 
 class CreatureFactory(Factory):
     @staticmethod
-    def make():
+    def make(parameter:int):
         randomType = random.choice(list(CreatureTypes))
         match randomType:
             case CreatureTypes.TypeA:
-                creature = CreatureFactory.make_creature_A()
+                creature = CreatureFactory.make_creature_A(parameter)
                 return CreatureFactory.add_powers(creature)
             case CreatureTypes.TypeB:
-                creature = CreatureFactory.make_creature_B()
+                creature = CreatureFactory.make_creature_B(parameter)
                 return CreatureFactory.add_powers(creature)
             case CreatureTypes.TypeC:
-                creature = CreatureFactory.make_creature_C()
+                creature = CreatureFactory.make_creature_C(parameter)
                 return CreatureFactory.add_powers(creature)
             case CreatureTypes.TypeD:
-                creature = CreatureFactory.make_creature_D()
+                creature = CreatureFactory.make_creature_D(parameter)
                 return CreatureFactory.add_powers(creature)
             case _:
                 print("Something fucky happened")
+    
+    @staticmethod
+    def make_average(type:CreatureTypes, powerBudget:int):
+        match type:
+            case CreatureTypes.TypeA:
+                creature = CreatureFactory.make_average_A()
+                return CreatureFactory.add_avg_powers(creature, powerBudget)
+            case CreatureTypes.TypeB:
+                creature = CreatureFactory.make_creature_B()
+                return CreatureFactory.add_avg_powers(creature, powerBudget)
+            case CreatureTypes.TypeC:
+                creature = CreatureFactory.make_creature_C()
+                return CreatureFactory.add_avg_powers(creature, powerBudget)
+            case CreatureTypes.TypeD:
+                creature = CreatureFactory.make_creature_D()
+                return CreatureFactory.add_avg_powers(creature, powerBudget)
+            case _:
+                print("Something fucky happened")
+        
 
     @staticmethod
     def add_powers(creature:Creature):
-        creature.add_power(PowerFactory.make())
-        creature.add_power(PowerFactory.make())
-        creature.add_power(PowerFactory.make())
-        creature.add_power(PowerFactory.make())
+        currentBudget = creature.genotype.powerBudget
+        currentBudget -= creature.add_power(PowerFactory.make(currentBudget))
+        currentBudget -= creature.add_power(PowerFactory.make(currentBudget))
+        currentBudget -= creature.add_power(PowerFactory.make(currentBudget))
+        currentBudget -= creature.add_power(PowerFactory.make(currentBudget))
 
+        assert currentBudget >= 0
+        return creature
+    
+    @staticmethod
+    def add_avg_powers(creature:Creature, powerBudget:int):
+        creature.add_power(PowerFactory.make_average(creature.type, powerBudget * 0.25))
+        creature.add_power(PowerFactory.make_average(creature.type, powerBudget * 0.25))
+        creature.add_power(PowerFactory.make_average(creature.type, powerBudget * 0.25))
+        creature.add_power(PowerFactory.make_average(creature.type, powerBudget * 0.25))
         return creature
 
     @staticmethod
-    def make_creature_A():
+    def make_creature_A(totalBudget:int):
+        gt = CreatureGenotype(totalBudget)
+        #HP conditions
         minHp = 50
-        maxHp = 70
-
+        hpGeneCost = 10
+        #Attack conditions
         minAttack = 4
-        maxAttack = 6
-
+        attackGeneCost = 20
+        #Speed conditions
         minSpeed = 3
-        maxSpeed = 7
+        speedGeneCost = 30
 
-        newCreature = Creature(CreatureTypes.TypeA, random.randint(minHp, maxHp), random.randint(minAttack, maxAttack), random.randint(minSpeed, maxSpeed))
-        return newCreature
+        createdCreature = Creature(
+            gt, CreatureTypes.TypeA, 
+            minHp + (gt.hpGeneValue // hpGeneCost)*10,
+            minAttack + (gt.attackGeneValue // attackGeneCost),
+            minSpeed + (gt.speedGeneValue // speedGeneCost)
+            )
+        return createdCreature
+
+
+    
+    @staticmethod
+    def make_average_A():
+        return Creature(CreatureTypes.TypeA, 60, 5, 5)
     
 
     @staticmethod
-    def make_creature_B():
-        minHp = 75
-        maxHp = 85
-
-        minAttack = 8
-        maxAttack = 10
-
-        minSpeed = 4
-        maxSpeed = 6
-
-        newCreature = Creature(CreatureTypes.TypeB, random.randint(minHp, maxHp), random.randint(minAttack, maxAttack), random.randint(minSpeed, maxSpeed))
-        return newCreature
-    
-    @staticmethod
-    def make_creature_C():
-        minHp = 85
-        maxHp = 115
-
-        minAttack = 7
-        maxAttack = 12
-
-        minSpeed = 3
-        maxSpeed = 5
-
-        newCreature = Creature(CreatureTypes.TypeC, random.randint(minHp, maxHp), random.randint(minAttack, maxAttack), random.randint(minSpeed, maxSpeed))
-        return newCreature
-
-    @staticmethod
-    def make_creature_D():
+    def make_creature_B(totalBudget:int):
+        gt = CreatureGenotype(totalBudget)
         minHp = 70
-        maxHp = 90
+        hpGeneCost = 15
+        minAttack = 7
+        attackGeneCost = 15
+        minSpeed = 2
+        speedGeneCost = 25
+        
+        createdCreature = Creature(
+            gt, CreatureTypes.TypeB, 
+            minHp + (gt.hpGeneValue // hpGeneCost)*10,
+            minAttack + (gt.attackGeneValue // attackGeneCost),
+            minSpeed + (gt.speedGeneValue // speedGeneCost)
+            )
+        return createdCreature
+    
+    @staticmethod
+    def make_average_B():
+        return Creature(CreatureTypes.TypeB, 80, 9, 5)
 
-        minAttack = 5
-        maxAttack = 7
+    @staticmethod
+    def make_creature_C(totalBudget:int):
+        gt = CreatureGenotype(totalBudget)
+        minHp = 85
+        hpGeneCost = 10
+        minAttack = 7
+        attackGeneCost = 10
+        minSpeed = 2
+        speedGeneCost = 35
 
-        minSpeed = 7
-        maxSpeed = 10
+        createdCreature = Creature(
+            gt, CreatureTypes.TypeC, 
+            minHp + (gt.hpGeneValue // hpGeneCost)*10,
+            minAttack + (gt.attackGeneValue // attackGeneCost),
+            minSpeed + (gt.speedGeneValue // speedGeneCost)
+            )
+        return createdCreature
 
-        newCreature = Creature(CreatureTypes.TypeD, random.randint(minHp, maxHp), random.randint(minAttack, maxAttack), random.randint(minSpeed, maxSpeed))
-        return newCreature
+    @staticmethod
+    def make_average_C():
+        return Creature(CreatureTypes.TypeC, 100, 9, 4)
+
+    @staticmethod
+    def make_creature_D(totalBudget:int):
+        gt = CreatureGenotype(totalBudget)
+        minHp = 70
+        hpGeneCost = 20
+
+        minAttack = 3
+        attackGeneCost = 25
+
+        minSpeed = 6
+        speedGeneCost = 15
+
+
+        return Creature(
+            gt, CreatureTypes.TypeD,
+            minHp + (gt.hpGeneValue // hpGeneCost)*10,
+            minAttack + (gt.attackGeneValue // attackGeneCost),
+            minSpeed + (gt.speedGeneValue // speedGeneCost)
+        )
+    
+    @staticmethod
+    def make_average_D():
+        return Creature(CreatureTypes.TypeD, 80, 5, 9)

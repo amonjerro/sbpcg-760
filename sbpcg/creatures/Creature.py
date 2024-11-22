@@ -1,4 +1,5 @@
 from enum import IntEnum
+import random
 
 class CreatureTypes(IntEnum):
     TypeA = 0
@@ -6,8 +7,20 @@ class CreatureTypes(IntEnum):
     TypeC = 2
     TypeD = 3
 
+class CreatureGenotype:
+    def __init__(self, totalBudget):
+        self.statsBudget = random.randint(0, totalBudget)
+        self.powerBudget = totalBudget - self.statsBudget
+
+        self.hpGeneValue = random.randint(0, self.statsBudget)
+        self.attackGeneValue = random.randint(0, self.statsBudget - self.hpGeneValue)
+        self.speedGeneValue = random.randint(0, self.statsBudget - (self.hpGeneValue + self.attackGeneValue))
+
+        assert self.hpGeneValue + self.attackGeneValue + self.speedGeneValue <= self.statsBudget
+
 class Creature:
-    def __init__(self, creatureType:CreatureTypes, hp:int, attack:int, speed:int):
+    def __init__(self, genotype:CreatureGenotype, creatureType:CreatureTypes, hp:int, attack:int, speed:int):
+        self.genotype = genotype
         self.hp = hp
         self.atk = attack
         self.speed = speed
@@ -17,6 +30,7 @@ class Creature:
         return f'Creature: {self.hp}, {self.atk}, {self.speed}, {self.type.name}. Powers: [{str(self.powers[0])}, {str(self.powers[1])}, {str(self.powers[2])}, {str(self.powers[3])}]'
     def add_power(self, power):
         self.powers.append(power)
+        return power.effect
     def get_max_damage_power(self):
         maxPowerValue = -1
         currentPowerValue = 0

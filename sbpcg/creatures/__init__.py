@@ -1,3 +1,4 @@
-from sbpcg.creatures.Creature import Creature
-from sbpcg.creatures.Creature import CreatureTypes
-from sbpcg.creatures.Power import Power
+from .Creature import Creature
+from .Creature import CreatureGenotype
+from .Creature import CreatureTypes
+from .Power import Power
