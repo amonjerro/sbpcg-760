@@ -117,12 +117,7 @@ class CreatureFactory(Factory):
                 return CreatureFactory.add_powers(creature)
             case _:
                 print("Something fucky happened")
-    
-    @staticmethod
-    def make_from_genotype(type, genotype:CreatureGenotype):
-        match type:
-            case CreatureTypes.TypeA:
-                pass
+                
 
     
     @staticmethod

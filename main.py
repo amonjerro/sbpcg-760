@@ -20,7 +20,8 @@ if __name__ == '__main__':
     theLads = [AverageTypeA, AverageTypeB, AverageTypeC, AverageTypeD]
 
     pop = Population(populationSize, survivors, geneticBudget, CreatureFactory, CreatureTransformer)
-    sim = Simulation(pop)
+    pop.make_population()
+    #sim = Simulation(pop)
 
 
     evaluatorTypeA = VectorEvaluator(CreatureTransformer.transform(AverageTypeA))

@@ -1,18 +1,18 @@
 from abc import ABC, abstractmethod
 import random
 from sbpcg import Creature, CreatureGenotype
-from sbpcg import MutationStrategy
+# from sbpcg import MutationStrategy
 from sbpcg import CreatureFactory
 
 class ReproductionStrategy(ABC):
-    @abstractmethod
     @staticmethod
-    def reproduce(candidateA:Creature, candidateB:Creature, mutationStrategy:MutationStrategy):
+    @abstractmethod
+    def reproduce(candidateA:Creature, candidateB:Creature, mutationStrategy):
         pass
 
 class CrossTypeReproduction(ReproductionStrategy):
-    @abstractmethod
     @staticmethod
+    @abstractmethod
     def reproduce(candidateA, candidateB, mutationStrategy):
         targetGenotype = None
         type = None

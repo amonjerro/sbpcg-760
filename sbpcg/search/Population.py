@@ -10,7 +10,7 @@ class Population:
         self.transformer = transformer
         self.survivors = survivors
     def make_population(self):
-        if len(self.current_population):
+        if len(self.current_population) == 0:
             # Create random children for first iteration
             for i in range(self.population_size):
                 self.current_population.append(self.factory.make(self.makeTuningParameter))

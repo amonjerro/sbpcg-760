@@ -1,8 +1,8 @@
-from sbpcg import Population
-from sbpcg import ReproductionStrategy
+#from sbpcg import Population
+# from sbpcg import ReproductionStrategy
 
 class Simulation:
-    def __init__(self, population:Population, repStrat:ReproductionStrategy):
+    def __init__(self, population, repStrat):
         self.population = population
     
     def populate(self):
