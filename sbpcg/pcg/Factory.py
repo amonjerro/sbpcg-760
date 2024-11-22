@@ -90,7 +90,6 @@ class PowerFactory(Factory):
     @staticmethod
     def make(parameter:int):
         powerValue = PowerFactory.minPowerValue + (parameter // PowerFactory.powerIncreaseCost)
-
         return Power(PowerFactory.make_power_name(), powerValue, random.choice(list(CreatureTypes)))
     
     @staticmethod
@@ -118,6 +117,13 @@ class CreatureFactory(Factory):
                 return CreatureFactory.add_powers(creature)
             case _:
                 print("Something fucky happened")
+    
+    @staticmethod
+    def make_from_genotype(type, genotype:CreatureGenotype):
+        match type:
+            case CreatureTypes.TypeA:
+                pass
+
     
     @staticmethod
     def make_average(type:CreatureTypes):
@@ -153,8 +159,11 @@ class CreatureFactory(Factory):
         return creature
 
     @staticmethod
-    def make_creature_A(totalBudget:int):
-        gt = CreatureGenotype(totalBudget)
+    def make_creature_A(totalBudget:int, genotype=None):
+        if genotype is None:
+            gt = CreatureGenotype(totalBudget)
+        else:
+            gt = genotype
         #HP conditions
         minHp = 50
         hpGeneCost = 2
@@ -183,8 +192,11 @@ class CreatureFactory(Factory):
     
 
     @staticmethod
-    def make_creature_B(totalBudget:int):
-        gt = CreatureGenotype(totalBudget)
+    def make_creature_B(totalBudget:int, genotype=None):
+        if genotype is None:
+            gt = CreatureGenotype(totalBudget)
+        else:
+            gt = genotype
         minHp = 70
         hpGeneCost = 4
         minAttack = 7
@@ -207,8 +219,11 @@ class CreatureFactory(Factory):
         return Creature(gt, CreatureTypes.TypeB, 390, 11, 3)
 
     @staticmethod
-    def make_creature_C(totalBudget:int):
-        gt = CreatureGenotype(totalBudget)
+    def make_creature_C(totalBudget:int, genotype = None):
+        if genotype is None:
+            gt = CreatureGenotype(totalBudget)
+        else:
+            gt = genotype
         minHp = 85
         hpGeneCost = 2
         minAttack = 7
@@ -231,8 +246,11 @@ class CreatureFactory(Factory):
         return Creature(gt, CreatureTypes.TypeC, 700, 12, 3)
 
     @staticmethod
-    def make_creature_D(totalBudget:int):
-        gt = CreatureGenotype(totalBudget)
+    def make_creature_D(totalBudget:int, genotype = None):
+        if genotype is None:
+            gt = CreatureGenotype(totalBudget)
+        else:
+            gt = genotype
         minHp = 70
         hpGeneCost = 4
 

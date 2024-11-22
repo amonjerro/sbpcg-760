@@ -22,12 +22,19 @@ class CreatureGenotype:
         self.power3Budget = random.randint(0, self.powerBudget - (self.power1Budget + self.power2Budget))
         self.power4Budget = random.randint(0, self.powerBudget - (self.power1Budget + self.power2Budget + self.power3Budget))
         assert self.power1Budget + self.power2Budget + self.power3Budget + self.power4Budget <= self.powerBudget
+
     def rerollPowerBudget(self,newPowerBudget:int):
         self.powerBudget = newPowerBudget
         self.power1Budget = random.randint(0, self.powerBudget)
         self.power2Budget = random.randint(0, self.powerBudget - self.power1Budget)
         self.power3Budget = random.randint(0, self.powerBudget - (self.power1Budget + self.power2Budget))
         self.power4Budget = random.randint(0, self.powerBudget - (self.power1Budget + self.power2Budget + self.power3Budget))
+
+    def rerollStatBudget(self,statBudget:int):
+        self.statsBudget = statBudget
+        self.hpGeneValue = random.randint(0, self.statsBudget)
+        self.attackGeneValue = random.randint(0, self.statsBudget - self.hpGeneValue)
+        self.speedGeneValue = random.randint(0, self.statsBudget - (self.hpGeneValue + self.attackGeneValue))
 
 class Creature:
     def __init__(self, genotype:CreatureGenotype, creatureType:CreatureTypes, hp:int, attack:int, speed:int):

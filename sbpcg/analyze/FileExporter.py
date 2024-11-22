@@ -13,11 +13,16 @@ class CSVExporter(FileExporter):
         self.file_name = file_name
         self.output_path = output_path
     
-    def export(self, data:List[List[int]], headers):
+    def export(self, data:List[List[int]], headers, filename=''):
+        filename_to_use = self.file_name
+        if filename != '':
+            filename_to_use = filename
+        
         if not os.path.exists(self.output_path):
             os.makedirs(self.output_path)
         
-        with open(f'{self.output_path}/{self.file_name}.csv', 'w') as f:
+        
+        with open(f'{self.output_path}/{filename_to_use}.csv', 'w') as f:
             f.write(','.join(headers)+'\n')
             for line in data:
                 f.write(','.join(map(lambda x: str(x), line))+'\n')

@@ -13,6 +13,11 @@ from sbpcg.pcg import FitnessTransformer
 from sbpcg.search import Evaluator
 from sbpcg.search import VectorEvaluator
 from sbpcg.search import Population
+from sbpcg.search import Simulation
+from sbpcg.search import ReproductionStrategy
+from sbpcg.search import MutationStrategy
+
 
 from sbpcg.analyze import FileExporter
 from sbpcg.analyze import CSVExporter
+from sbpcg.analyze import SanityTester

@@ -72,18 +72,24 @@ class Evaluator:
             return 0
 
 class VectorEvaluator(Fitness):
-    def __init__(self, opponent):
+    def __init__(self, opponent, verbose=False):
         self.opponent = opponent
         self.powerTupleIndex = 4
         self.monPowerIndex = 2
         self.hpIndex = 1
         self.monSpeedIndex = 3
-
+        self.verbose = verbose
         self.winBonus = 10
 
     def evaluate(self, candidate:List[Union[int, Tuple[int,...]]]):
+        if self.verbose:
+            print("====Debugging Math=====")
+            print(self.opponent)
+            print(candidate)
+
         # Base fitness of two
         fitness = 2
+        debugOutput = ''
         candidateType = candidate[0]
         opp = self.opponent
         candidatePowerDamageValues = list(
@@ -96,9 +102,13 @@ class VectorEvaluator(Fitness):
         mostDangerousPower = max(opponentPowerDamageValues)
         turnsToWin = 1 + opp[self.hpIndex] // mostDamagingPower
         turnsToLose = 1 + candidate[self.hpIndex] // mostDangerousPower
+        
+        if self.verbose:
+            print(f'Most dangerous power: {mostDangerousPower}, Most damaging power: {mostDamagingPower}')
+            print(f'Turns to Lose: {turnsToLose}, Turns to Win: {turnsToWin}')
+        
         # Do I win?
-
-        if turnsToWin > turnsToLose:
+        if turnsToWin < turnsToLose:
             # yes
             fitness += self.winBonus
         elif turnsToWin == turnsToLose:
@@ -110,19 +120,25 @@ class VectorEvaluator(Fitness):
                 fitness += self.winBonus * 0.5
 
         # How close is the match?
-        if turnsToLose > turnsToWin:
+        if turnsToLose < turnsToWin:
             damageDealt = turnsToLose * mostDamagingPower
             if candidate[self.monSpeedIndex] > opp[self.monSpeedIndex]:
                 damageDealt += mostDamagingPower
             elif candidate[self.monSpeedIndex] < opp[self.monSpeedIndex]:
                 damageDealt -= mostDamagingPower
+            if self.verbose:
+                print(f'Damage dealt: {damageDealt}')
             fitness *= damageDealt / opp[self.hpIndex]
-        elif turnsToWin > turnsToLose:
+        elif turnsToWin <= turnsToLose:
             damageReceived = turnsToWin * mostDangerousPower
             if candidate[self.monSpeedIndex] < opp[self.monSpeedIndex]:
                 damageReceived += mostDangerousPower
             elif candidate[self.monSpeedIndex] > opp[self.monSpeedIndex]:
                 damageReceived -= mostDangerousPower
+            if damageReceived<0:
+                damageReceived = 0
+            if self.verbose:
+                print(f"Damage received: {damageReceived}")
             fitness *= 1-(damageReceived / candidate[self.hpIndex])
 
 
