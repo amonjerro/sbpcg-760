@@ -39,9 +39,26 @@ class CreatureTransformer(Transformer):
 class GenotypeTransformer(Transformer):
     @staticmethod
     def get_headers():
-        return ['stats', 'powers', 'hp', 'atk', 'speed']
+        return ['stats', 'powers', 'hp', 'atk', 'speed', 'pbgt1','pbgt2','pbgt3','pbgt4']
     
     @staticmethod
     def transform(target:Creature):
         gt = target.genotype
-        return [gt.statsBudget, gt.powerBudget, gt.hpGeneValue, gt.attackGeneValue, gt.speedGeneValue]
+        return [
+            gt.statsBudget, gt.powerBudget, gt.hpGeneValue, gt.attackGeneValue, gt.speedGeneValue,
+            gt.power1Budget, gt.power2Budget, gt.power3Budget, gt.power4Budget]
+    
+class FitnessTransformer(CreatureTransformer):
+    @staticmethod
+    def get_headers():
+        return ['type', 'hp', 'attack', 'speed', 'power_1', 'power_2', 'power_3', 'power_4', 'fitness']
+    
+    @staticmethod
+    def transform(target):
+        ## Transform the creature
+        output = [int(target.type), target.hp, target.atk, target.speed]
+        ## Append the powers
+        for power in target.powers:
+            output += PowerTransformer.transform(power)
+        output += [target.fitness]
+        return output

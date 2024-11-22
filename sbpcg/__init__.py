@@ -8,6 +8,7 @@ from sbpcg.pcg import CreatureFactory
 from sbpcg.pcg import Transformer
 from sbpcg.pcg import GenotypeTransformer
 from sbpcg.pcg import CreatureTransformer
+from sbpcg.pcg import FitnessTransformer
 
 from sbpcg.search import Evaluator
 from sbpcg.search import VectorEvaluator

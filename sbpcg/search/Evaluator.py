@@ -76,10 +76,54 @@ class VectorEvaluator(Fitness):
         self.opponent = opponent
         self.powerTupleIndex = 4
         self.monPowerIndex = 2
+        self.hpIndex = 1
+        self.monSpeedIndex = 3
+
+        self.winBonus = 10
+
     def evaluate(self, candidate:List[Union[int, Tuple[int,...]]]):
+        # Base fitness of two
+        fitness = 2
         candidateType = candidate[0]
         opp = self.opponent
-        powers = list(
+        candidatePowerDamageValues = list(
             map(lambda x: x[0] * self.evaluate_type(int(opp[0]), x[1]) * self.STAB_bonus(candidateType, x[1]) * candidate[self.monPowerIndex], 
             candidate[self.powerTupleIndex:]))
-        return powers
+        mostDamagingPower = max(candidatePowerDamageValues)
+        opponentPowerDamageValues = list(
+            map(lambda x: x[0] * self.evaluate_type(int(candidateType), x[1]) * self.STAB_bonus(opp[0], x[1]) * opp[self.monPowerIndex], 
+            opp[self.powerTupleIndex:]))
+        mostDangerousPower = max(opponentPowerDamageValues)
+        turnsToWin = 1 + opp[self.hpIndex] // mostDamagingPower
+        turnsToLose = 1 + candidate[self.hpIndex] // mostDangerousPower
+        # Do I win?
+
+        if turnsToWin > turnsToLose:
+            # yes
+            fitness += self.winBonus
+        elif turnsToWin == turnsToLose:
+            # Depends on who goes first
+            if candidate[self.monSpeedIndex] > opp[self.monSpeedIndex]:
+                fitness += self.winBonus
+            elif candidate[self.monSpeedIndex] == opp[self.monSpeedIndex]:
+                # Speed ties are resolved randomly, so in theory you win half the time
+                fitness += self.winBonus * 0.5
+
+        # How close is the match?
+        if turnsToLose > turnsToWin:
+            damageDealt = turnsToLose * mostDamagingPower
+            if candidate[self.monSpeedIndex] > opp[self.monSpeedIndex]:
+                damageDealt += mostDamagingPower
+            elif candidate[self.monSpeedIndex] < opp[self.monSpeedIndex]:
+                damageDealt -= mostDamagingPower
+            fitness *= damageDealt / opp[self.hpIndex]
+        elif turnsToWin > turnsToLose:
+            damageReceived = turnsToWin * mostDangerousPower
+            if candidate[self.monSpeedIndex] < opp[self.monSpeedIndex]:
+                damageReceived += mostDangerousPower
+            elif candidate[self.monSpeedIndex] > opp[self.monSpeedIndex]:
+                damageReceived -= mostDangerousPower
+            fitness *= 1-(damageReceived / candidate[self.hpIndex])
+
+
+        return fitness
