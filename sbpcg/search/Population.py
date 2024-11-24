@@ -17,17 +17,16 @@ class Population:
     def get_new_candidate_count(self):
         return self.population_size - len(self.current_population)
     def make_population(self):
-        if len(self.current_population) == 0:
-            # Create random children for first iteration
-            for i in range(self.population_size):
-                self.current_population.append(self.factory.make(self.make_tuning_param))
+        self.current_population = self.current_population[:0]
+        for i in range(self.population_size):
+            self.current_population.append(self.factory.make(self.make_tuning_param))
     def get_random_candidates(self, withReplacement:bool = False):
         individuals = []
         firstChoice = random.randint(0, len(self.current_population)-1)
         secondChoice = random.randint(0, len(self.current_population)-1)
         if not withReplacement:
             while firstChoice == secondChoice:
-                secondChoice = random.randint(0, len(self.current_population))
+                secondChoice = random.randint(0, len(self.current_population)-1)
         individuals.append(self.current_population[firstChoice])
         individuals.append(self.current_population[secondChoice])
         return individuals

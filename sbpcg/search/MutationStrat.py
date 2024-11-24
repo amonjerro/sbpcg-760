@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 import random
-from sbpcg import Creature, CreatureGenotype
+from sbpcg import Creature, CreatureGenotype, CreatureTypes
 
 class MutationStrategy(ABC):
     @abstractmethod
@@ -26,4 +26,19 @@ class BudgetMutationStrategy(MutationStrategy):
             newGt.rerollStatBudget(gt.statsBudget - self.mutationFactor)
             newGt.rerollPowerBudget(gt.powerBudget + self.mutationFactor)
 
+        return newGt
+
+class TypeMutationStrategy(MutationStrategy):
+    def __init__(self, mutationRate:float, mutationFactor:int):
+        self.mutationRate = mutationRate
+        self.mutationFactor = mutationFactor
+    def mutate(self, creature):
+        chance = random.random()
+        if chance > self.mutationRate:
+            return creature.genotype
+        
+        newGt = creature.genotype.clone()
+        currentValue = newGt.type
+        currentValue = CreatureTypes((int(currentValue) + self.mutationFactor) % len(CreatureTypes))
+        newGt.type = currentValue
         return newGt

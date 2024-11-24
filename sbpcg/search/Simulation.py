@@ -30,23 +30,23 @@ class GenerationData:
 
     def flatten(self):
         return [
-            self.averageFitness,
-            self.typeACount,
-            self.averageAFitness,
-            self.averageAStatsBudget,
-            self.averageAPowerBudget,
-            self.typeBCount,
-            self.averageBFitness,
-            self.averageBStatsBudget,
-            self.averageBPowerBudget,
-            self.typeCCount,
-            self.averageCFitness,
-            self.averageCStatsBudget,
-            self.averageCPowerBudget,
-            self.typeDCount,
-            self.averageDFitness,
-            self.averageDStatsBudget,
-            self.averageDPowerBudget
+            self.averageFitness,        #0
+            self.typeACount,            #1
+            self.averageAFitness,       #2
+            self.averageAStatsBudget,   #3
+            self.averageAPowerBudget,   #4
+            self.typeBCount,            #5
+            self.averageBFitness,       #6
+            self.averageBStatsBudget,   #7
+            self.averageBPowerBudget,   #8
+            self.typeCCount,            #9
+            self.averageCFitness,       #10
+            self.averageCStatsBudget,   #11
+            self.averageCPowerBudget,   #12
+            self.typeDCount,            #13
+            self.averageDFitness,       #14
+            self.averageDStatsBudget,   #15
+            self.averageDPowerBudget    #16
         ]
     
     def get_headers(self):
@@ -119,6 +119,10 @@ class Simulation:
             fitnessByType[i.type] += i.fitness
         
         totalFitness = sum(fitnessByType)
+        gd.typeACount = popCounter[CreatureTypes.TypeA]
+        gd.typeBCount = popCounter[CreatureTypes.TypeB]
+        gd.typeCCount = popCounter[CreatureTypes.TypeC]
+        gd.typeDCount = popCounter[CreatureTypes.TypeD]
         
         # Get averages
         for i in CreatureTypes:

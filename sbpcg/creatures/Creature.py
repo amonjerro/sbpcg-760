@@ -8,7 +8,8 @@ class CreatureTypes(IntEnum):
     TypeD = 3
 
 class CreatureGenotype:
-    def __init__(self, totalBudget):
+    def __init__(self, totalBudget, ct=CreatureTypes.TypeA):
+        self.type = ct
         self.statsBudget = random.randint(0, totalBudget)
         self.powerBudget = totalBudget - self.statsBudget
 
@@ -39,14 +40,26 @@ class CreatureGenotype:
         self.hpGeneValue = random.randint(0, self.statsBudget)
         self.attackGeneValue = random.randint(0, self.statsBudget - self.hpGeneValue)
         self.speedGeneValue = random.randint(0, self.statsBudget - (self.hpGeneValue + self.attackGeneValue))
+    
+    def clone(self):
+        gt = CreatureGenotype(self.statsBudget + self.powerBudget, self.type)
+        gt.hpGeneValue = self.hpGeneValue
+        gt.attackGeneValue = self.attackGeneValue
+        gt.speedGeneValue = self.speedGeneValue
+        gt.power1Budget = self.power1Budget
+        gt.power2Budget = self.power2Budget
+        gt.power3Budget = self.power3Budget
+        gt.power4Budget = self.power4Budget
+        
+        return gt
 
 class Creature:
-    def __init__(self, genotype:CreatureGenotype, creatureType:CreatureTypes, hp:int, attack:int, speed:int):
+    def __init__(self, genotype:CreatureGenotype, hp:int, attack:int, speed:int):
         self.genotype = genotype
         self.hp = hp
         self.atk = attack
         self.speed = speed
-        self.type = creatureType
+        self.type = genotype.type
         self.powers = []
         self.fitness = 0
     def __str__(self):

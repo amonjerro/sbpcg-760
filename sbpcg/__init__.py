@@ -18,6 +18,7 @@ from sbpcg.search import ReproductionStrategy
 from sbpcg.search import CrossTypeReproduction
 from sbpcg.search import MutationStrategy
 from sbpcg.search import BudgetMutationStrategy
+from sbpcg.search import TypeMutationStrategy
 
 
 from sbpcg.analyze import FileExporter

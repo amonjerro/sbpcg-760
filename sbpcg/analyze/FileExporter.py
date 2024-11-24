@@ -27,9 +27,10 @@ class ImageExporter(FileExporter):
         self.output_path = output_path
         self.filetype = filetype
     
-    def export(self, data:List[List[int]], filename=''):
+    def export(self, data:List[List[int]], file_prefix=''):
         import matplotlib.pyplot as plt
         from PIL import Image
+        from sbpcg import CreatureTypes
 
         
         if not os.path.exists(self.output_path):
@@ -37,15 +38,26 @@ class ImageExporter(FileExporter):
         
         x = [i for i in range(len(data))]
         fitness = [i[0] for i in data]
-        print(fitness[0])
 
+        # Plot Average Fitness
         fig, ax = plt.subplots(figsize = (5,2.7), layout="constrained")
         ax.plot(x, fitness)
         ax.set_xlabel("Generations")
         ax.set_ylabel("Average Fitness Value")
         ax.set_title("Average fitness over time")
-        
         fig.canvas.draw()
         image = Image.frombytes('RGB', fig.canvas.get_width_height(), fig.canvas.tostring_rgb())
         plt.close(fig)
-        image.save(f'{self.output_path}/{filename}.{self.filetype}')
+        image.save(f'{self.output_path}/{file_prefix}-avgFitness.{self.filetype}')
+
+        frames = []
+        for i in range(len(data)):
+            fig, ax = plt.subplots(figsize = (5,2.7), layout="constrained")
+            ax.bar([i.name for i in CreatureTypes], [data[i][1],data[i][5],data[i][9],data[i][13]])
+            ax.set_title(f"Count of creature by type. Gen {i}")
+            fig.canvas.draw()
+            image = Image.frombytes('RGB', fig.canvas.get_width_height(), fig.canvas.tostring_rgb())
+            plt.close(fig)
+            frames.append(image)
+        frames[0].save(f'{self.output_path}/{file_prefix}-typeCount.gif', save_all=True, append_images=frames[1:], duration=350, loop=0)
+        

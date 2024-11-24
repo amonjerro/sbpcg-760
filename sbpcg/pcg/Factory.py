@@ -173,7 +173,7 @@ class CreatureFactory(Factory):
     @staticmethod
     def make_creature_A(totalBudget:int, genotype=None):
         if genotype is None:
-            gt = CreatureGenotype(totalBudget)
+            gt = CreatureGenotype(totalBudget, CreatureTypes.TypeA)
         else:
             gt = genotype
         #HP conditions
@@ -187,7 +187,7 @@ class CreatureFactory(Factory):
         speedGeneCost = 30
 
         createdCreature = Creature(
-            gt, CreatureTypes.TypeA, 
+            gt, 
             minHp + (gt.hpGeneValue // hpGeneCost)*10,
             minAttack + (gt.attackGeneValue // attackGeneCost),
             minSpeed + (gt.speedGeneValue // speedGeneCost)
@@ -198,15 +198,15 @@ class CreatureFactory(Factory):
     
     @staticmethod
     def make_average_A():
-        gt = CreatureGenotype(0)
+        gt = CreatureGenotype(0, CreatureTypes.TypeA)
         gt.rerollPowerBudget(250)
-        return Creature(gt, CreatureTypes.TypeA, 650, 7, 4)
+        return Creature(gt, 650, 7, 4)
     
 
     @staticmethod
     def make_creature_B(totalBudget:int, genotype=None):
         if genotype is None:
-            gt = CreatureGenotype(totalBudget)
+            gt = CreatureGenotype(totalBudget, CreatureTypes.TypeB)
         else:
             gt = genotype
         minHp = 70
@@ -217,7 +217,7 @@ class CreatureFactory(Factory):
         speedGeneCost = 25
         
         createdCreature = Creature(
-            gt, CreatureTypes.TypeB, 
+            gt, 
             minHp + (gt.hpGeneValue // hpGeneCost)*10,
             minAttack + (gt.attackGeneValue // attackGeneCost),
             minSpeed + (gt.speedGeneValue // speedGeneCost)
@@ -226,14 +226,14 @@ class CreatureFactory(Factory):
     
     @staticmethod
     def make_average_B():
-        gt = CreatureGenotype(0)
+        gt = CreatureGenotype(0, CreatureTypes.TypeB)
         gt.rerollPowerBudget(250)
-        return Creature(gt, CreatureTypes.TypeB, 390, 11, 3)
+        return Creature(gt, 390, 11, 3)
 
     @staticmethod
     def make_creature_C(totalBudget:int, genotype = None):
         if genotype is None:
-            gt = CreatureGenotype(totalBudget)
+            gt = CreatureGenotype(totalBudget, CreatureTypes.TypeC)
         else:
             gt = genotype
         minHp = 85
@@ -244,7 +244,7 @@ class CreatureFactory(Factory):
         speedGeneCost = 35
 
         createdCreature = Creature(
-            gt, CreatureTypes.TypeC, 
+            gt, 
             minHp + (gt.hpGeneValue // hpGeneCost)*10,
             minAttack + (gt.attackGeneValue // attackGeneCost),
             minSpeed + (gt.speedGeneValue // speedGeneCost)
@@ -253,14 +253,14 @@ class CreatureFactory(Factory):
 
     @staticmethod
     def make_average_C():
-        gt = CreatureGenotype(0)
+        gt = CreatureGenotype(0, CreatureTypes.TypeC)
         gt.rerollPowerBudget(250)
-        return Creature(gt, CreatureTypes.TypeC, 700, 12, 3)
+        return Creature(gt, 700, 12, 3)
 
     @staticmethod
     def make_creature_D(totalBudget:int, genotype = None):
         if genotype is None:
-            gt = CreatureGenotype(totalBudget)
+            gt = CreatureGenotype(totalBudget, CreatureTypes.TypeD)
         else:
             gt = genotype
         minHp = 70
@@ -274,7 +274,7 @@ class CreatureFactory(Factory):
 
 
         return Creature(
-            gt, CreatureTypes.TypeD,
+            gt,
             minHp + (gt.hpGeneValue // hpGeneCost)*10,
             minAttack + (gt.attackGeneValue // attackGeneCost),
             minSpeed + (gt.speedGeneValue // speedGeneCost)
@@ -282,6 +282,6 @@ class CreatureFactory(Factory):
     
     @staticmethod
     def make_average_D():
-        gt = CreatureGenotype(0)
+        gt = CreatureGenotype(0, CreatureTypes.TypeD)
         gt.rerollPowerBudget(250)
-        return Creature(gt,CreatureTypes.TypeD, 380, 5, 8)
+        return Creature(gt, 380, 5, 8)
