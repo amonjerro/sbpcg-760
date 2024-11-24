@@ -21,5 +21,6 @@ from sbpcg.search import BudgetMutationStrategy
 
 
 from sbpcg.analyze import FileExporter
+from sbpcg.analyze import ImageExporter
 from sbpcg.analyze import CSVExporter
 from sbpcg.analyze import SanityTester
