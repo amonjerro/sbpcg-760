@@ -137,7 +137,24 @@ class CreatureFactory(Factory):
                 return CreatureFactory.add_powers(creature, average=True)
             case _:
                 print("Something fucky happened")
-        
+    
+    @staticmethod
+    def make_from_genotype(type:CreatureTypes, gt:CreatureGenotype):
+        match type:
+            case CreatureTypes.TypeA:
+                creature = CreatureFactory.make_creature_A(gt.statsBudget + gt.powerBudget, gt)
+                return CreatureFactory.add_powers(creature)
+            case CreatureTypes.TypeB:
+                creature = CreatureFactory.make_creature_B(gt.statsBudget + gt.powerBudget,gt)
+                return CreatureFactory.add_powers(creature)
+            case CreatureTypes.TypeC:
+                creature = CreatureFactory.make_creature_C(gt.statsBudget + gt.powerBudget,gt)
+                return CreatureFactory.add_powers(creature)
+            case CreatureTypes.TypeD:
+                creature = CreatureFactory.make_creature_D(gt.statsBudget + gt.powerBudget,gt)
+                return CreatureFactory.add_powers(creature)
+            case _:
+                print("Something fucky happened")
 
     @staticmethod
     def add_powers(creature:Creature, average = False):

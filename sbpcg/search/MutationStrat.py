@@ -17,13 +17,13 @@ class BudgetMutationStrategy(MutationStrategy):
             return creature.genotype
         
         gt = creature.genotype
-        newGt = CreatureGenotype(gt)
-        positiveRate =  chance() > 0.5
+        newGt = CreatureGenotype(gt.powerBudget + gt.statsBudget)
+        positiveRate =  random.random() > 0.5
         if positiveRate:
-            newGt.rerollStatBudget(newGt.statsBudget + self.mutationFactor)
-            newGt.rerollPowerBudget(newGt.powerBudget - self.mutationFactor)
+            newGt.rerollStatBudget(gt.statsBudget + self.mutationFactor)
+            newGt.rerollPowerBudget(gt.powerBudget - self.mutationFactor)
         else:
-            newGt.rerollStatBudget(newGt.statsBudget - self.mutationFactor)
-            newGt.rerollPowerBudget(newGt.powerBudget + self.mutationFactor)
+            newGt.rerollStatBudget(gt.statsBudget - self.mutationFactor)
+            newGt.rerollPowerBudget(gt.powerBudget + self.mutationFactor)
 
         return newGt

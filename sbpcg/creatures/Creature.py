@@ -25,6 +25,8 @@ class CreatureGenotype:
 
     def rerollPowerBudget(self,newPowerBudget:int):
         self.powerBudget = newPowerBudget
+        if self.powerBudget < 0:
+            self.powerBudget = 0
         self.power1Budget = random.randint(0, self.powerBudget)
         self.power2Budget = random.randint(0, self.powerBudget - self.power1Budget)
         self.power3Budget = random.randint(0, self.powerBudget - (self.power1Budget + self.power2Budget))
@@ -32,6 +34,8 @@ class CreatureGenotype:
 
     def rerollStatBudget(self,statBudget:int):
         self.statsBudget = statBudget
+        if self.statsBudget < 0:
+            self.statsBudget = 0
         self.hpGeneValue = random.randint(0, self.statsBudget)
         self.attackGeneValue = random.randint(0, self.statsBudget - self.hpGeneValue)
         self.speedGeneValue = random.randint(0, self.statsBudget - (self.hpGeneValue + self.attackGeneValue))

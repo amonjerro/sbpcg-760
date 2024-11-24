@@ -1,4 +1,4 @@
-from sbpcg import Population
+from sbpcg import Population, Simulation, CrossTypeReproduction, BudgetMutationStrategy
 from sbpcg import Simulation
 from sbpcg import CreatureFactory, CreatureTransformer, GenotypeTransformer, FitnessTransformer
 from sbpcg import CSVExporter
@@ -6,9 +6,16 @@ from sbpcg import CreatureTypes
 from sbpcg import VectorEvaluator
 
 if __name__ == '__main__':
+    generationsToRun = 5
+    useReplacement = False
+    
     populationSize = 2000
     survivors = 500
+
     geneticBudget = 500
+
+    mutationRate = 0.1
+    mutationFactor = 10
 
     phenotypeExporter = CSVExporter('./output', 'phenotype_population')
     genotypeExporter = CSVExporter('./output', 'genotype_population')
@@ -20,14 +27,12 @@ if __name__ == '__main__':
     theLads = [AverageTypeA, AverageTypeB, AverageTypeC, AverageTypeD]
 
     pop = Population(populationSize, survivors, geneticBudget, CreatureFactory, CreatureTransformer)
-    pop.make_population()
-    #sim = Simulation(pop)
+    fitness = VectorEvaluator(CreatureTransformer.transform(AverageTypeA))
+    rep = CrossTypeReproduction()
+    mut = BudgetMutationStrategy(mutationRate=mutationRate,mutationFactor=mutationFactor)
+    sim = Simulation(generationsToRun, pop, rep, mut, fitness, useReplacement)
 
-
-    evaluatorTypeA = VectorEvaluator(CreatureTransformer.transform(AverageTypeA))
-    fitnessValues = [evaluatorTypeA.evaluate(pop.transform(i)) for i in range(populationSize)]
-    for i in range(len(fitnessValues)):
-        pop.current_population[i].fitness = fitnessValues[i]
+    sim.run_simulation()
 
     #Export for analysis
     genotypeExporter.export(map(lambda x: GenotypeTransformer.transform(x), theLads), GenotypeTransformer.get_headers(),'geno_control')
