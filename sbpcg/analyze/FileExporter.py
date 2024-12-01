@@ -18,9 +18,9 @@ class CSVExporter(FileExporter):
         
         
         with open(f'{self.output_path}/{filename}.csv', 'w') as f:
-            f.write(','.join(headers)+'\n')
+            f.write('-'.join(headers)+'\n')
             for line in data:
-                f.write(','.join(map(lambda x: str(x), line))+'\n')
+                f.write('-'.join(map(lambda x: str(x), line))+'\n')
 
 class ImageExporter(FileExporter):
     def __init__(self, output_path, filetype):

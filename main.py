@@ -7,8 +7,8 @@ from sbpcg import CSVExporter, ImageExporter
 from sbpcg import CreatureTypes
 from sbpcg import VectorEvaluator
 
-if __name__ == '__main__':
-    generationsToRun = 10
+def main():
+    generationsToRun = 20
     useReplacement = False
     
     populationSize = 2000
@@ -49,4 +49,7 @@ if __name__ == '__main__':
     end_time = time.time()
 
     
-    print(end_time - start_time)
+    #print(end_time - start_time)
+
+if __name__ == '__main__':
+    main()

@@ -97,6 +97,8 @@ class Simulation:
         for i in range(self.generationsToRun):
             self.run_simulation_step()
             self.currentIteration += 1
+        self.showFitnessImprovement()
+        self.showPopulationDistributionChange()
 
     def get_generation_data(self, flatten = True):
         if (flatten):
@@ -166,3 +168,13 @@ class Simulation:
         
         # Cull
         self.pop.cull()
+
+    def showFitnessImprovement(self):
+        print('==== Fitness Improvement ====')
+        print(f'Start Average Fitness: {self.dataByGeneration[0].averageFitness}')
+        print(f'Last Gen Fitness: {self.dataByGeneration[-1].averageFitness}')
+
+    def showPopulationDistributionChange(self):
+        print('==== Population Distribution Change ====')
+        print(f'[{self.dataByGeneration[0].typeACount}, {self.dataByGeneration[0].typeBCount}, {self.dataByGeneration[0].typeCCount}, {self.dataByGeneration[0].typeDCount}]')
+        print(f'[{self.dataByGeneration[-1].typeACount}, {self.dataByGeneration[-1].typeBCount}, {self.dataByGeneration[-1].typeCCount}, {self.dataByGeneration[-1].typeDCount}]')
