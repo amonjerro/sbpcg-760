@@ -1,4 +1,3 @@
-from .Evaluator import Evaluator
 from .Evaluator import VectorEvaluator
 from .Population import Population
 from .Simulation import Simulation
